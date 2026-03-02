@@ -1,32 +1,33 @@
 package src;
 
+import java.util.Stack;
+
 public class PalindromeApp2 {
 
     public static void main(String[] args) {
 
         // Original string
-        String original = "radar";
+        String original = "madam";
 
-        // Convert String to Character Array
-        char[] characters = original.toCharArray();
 
-        // Two-pointer approach
-        int start = 0;
-        int end = characters.length - 1;
+        Stack<Character> stack = new Stack<>();
+
+
+        for (int i = 0; i < original.length(); i++) {
+            stack.push(original.charAt(i));
+        }
 
         boolean isPalindrome = true;
 
-        // Compare characters from both ends
-        while (start < end) {
-            if (characters[start] != characters[end]) {
+
+        for (int i = 0; i < original.length(); i++) {
+            if (original.charAt(i) != stack.pop()) {
                 isPalindrome = false;
                 break;
             }
-            start++;
-            end--;
         }
 
-        // Display result
+
         if (isPalindrome) {
             System.out.println(original + " is a Palindrome.");
         } else {
