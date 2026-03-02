@@ -1,29 +1,31 @@
 package src;
 
-import java.util.Stack;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 public class PalindromeApp2 {
 
     public static void main(String[] args) {
 
 
-        String original = "level";
+        String original = "racecar";
 
 
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> deque = new ArrayDeque<>();
 
 
         for (int i = 0; i < original.length(); i++) {
-            stack.push(original.charAt(i));
+            deque.addLast(original.charAt(i));
         }
 
         boolean isPalindrome = true;
 
 
-        for (int i = 0; i < original.length(); i++) {
-            char poppedChar = stack.pop();
+        while (deque.size() > 1) {
+            char front = deque.removeFirst();
+            char rear = deque.removeLast();
 
-            if (original.charAt(i) != poppedChar) {
+            if (front != rear) {
                 isPalindrome = false;
                 break;
             }
