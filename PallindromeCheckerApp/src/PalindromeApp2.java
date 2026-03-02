@@ -6,8 +6,8 @@ public class PalindromeApp2 {
 
     public static void main(String[] args) {
 
-        // Original string
-        String original = "madam";
+
+        String original = "level";
 
 
         Stack<Character> stack = new Stack<>();
@@ -21,7 +21,9 @@ public class PalindromeApp2 {
 
 
         for (int i = 0; i < original.length(); i++) {
-            if (original.charAt(i) != stack.pop()) {
+            char poppedChar = stack.pop();
+
+            if (original.charAt(i) != poppedChar) {
                 isPalindrome = false;
                 break;
             }
