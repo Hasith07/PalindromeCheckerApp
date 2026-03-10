@@ -1,3 +1,4 @@
+import java.util.Stack;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.ArrayDeque;
@@ -32,6 +33,30 @@ class DequeStrategy implements PalindromeStrategy {
         Deque<Character> deque = new ArrayDeque<>();
         for (char c : clean.toCharArray()) {
             deque.addLast(c);
+public class PalindromeApp {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        PalindromeChecker checker = new PalindromeChecker();
+
+        System.out.println("=== Object-Oriented Palindrome Checker (UC11) ===");
+        System.out.print("Enter text: ");
+        String input = scanner.nextLine();
+
+        if (checker.checkPalindrome(input)) {
+            System.out.println("Result: The input is a palindrome.");
+        } else {
+            System.out.println("Result: The input is NOT a palindrome.");
+        }
+        
+        scanner.close();
+    }
+}
+
+class PalindromeChecker {
+  
+    public boolean checkPalindrome(String input) {
+        if (input == null || input.isEmpty()) {
+            return false;
         }
         while (deque.size() > 1) {
             if (!deque.removeFirst().equals(deque.removeLast())) {
@@ -78,8 +103,21 @@ public class UseCase12PalindromeCheckerApp {
             System.out.println("Result: It is a palindrome.");
         } else {
             System.out.println("Result: It is NOT a palindrome.");
+        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        
+        Stack<Character> stack = new Stack<>();
+
+     
+        for (char c : cleanInput.toCharArray()) {
+            stack.push(c);
         }
 
-        scanner.close();
+
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+
+        return cleanInput.equals(reversed.toString());
     }
 }
