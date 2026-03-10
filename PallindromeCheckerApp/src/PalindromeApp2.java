@@ -6,29 +6,36 @@ public class PalindromeApp {
         Scanner scanner = new Scanner(System.in);
         PalindromeChecker checker = new PalindromeChecker();
 
+        System.out.println("=== Object-Oriented Palindrome Checker (UC11) ===");
         System.out.print("Enter text: ");
         String input = scanner.nextLine();
 
         if (checker.checkPalindrome(input)) {
-            System.out.println("The input is a palindrome.");
+            System.out.println("Result: The input is a palindrome.");
         } else {
-            System.out.println("The input is not a palindrome.");
+            System.out.println("Result: The input is NOT a palindrome.");
         }
-
+        
         scanner.close();
     }
 }
 
 class PalindromeChecker {
+  
     public boolean checkPalindrome(String input) {
-        if (input == null) return false;
+        if (input == null || input.isEmpty()) {
+            return false;
+        }
 
         String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        
         Stack<Character> stack = new Stack<>();
 
+     
         for (char c : cleanInput.toCharArray()) {
             stack.push(c);
         }
+
 
         StringBuilder reversed = new StringBuilder();
         while (!stack.isEmpty()) {
