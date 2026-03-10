@@ -1,4 +1,7 @@
 import java.util.Scanner;
+import java.util.Stack;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public class PalindromePerformanceTracker {
 
@@ -38,6 +41,17 @@ public class PalindromePerformanceTracker {
         for (int i = 0; i < 10000; i++) {
             runAlgorithm(input, type);
         }
+        while (deque.size() > 1) {
+            if (!deque.removeFirst().equals(deque.removeLast())) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+class PalindromeContext {
+    private PalindromeStrategy strategy;
 
         long startTime = System.nanoTime();
         for (int i = 0; i < iterations; i++) {
