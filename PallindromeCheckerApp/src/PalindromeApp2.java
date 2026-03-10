@@ -1,43 +1,40 @@
-package src;
+import java.util.Stack;
 import java.util.Scanner;
 
-public class UseCase9PalindromeCheckerApp {
-
-    // Recursive method to check palindrome
-    public static boolean isPalindrome(String str, int start, int end) {
-
-        // Base condition: if start crosses end
-        if (start >= end) {
-            return true;
-        }
-
-        // If characters don't match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call for next characters
-        return isPalindrome(str, start + 1, end - 1);
-    }
-
+public class PalindromeApp {
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
+        PalindromeChecker checker = new PalindromeChecker();
 
-        System.out.println("Enter a string to check if it is a palindrome:");
+        System.out.print("Enter text: ");
         String input = scanner.nextLine();
 
-        // Remove spaces and convert to lowercase for uniform comparison
-        input = input.replaceAll("\\s+", "").toLowerCase();
-
-        boolean result = isPalindrome(input, 0, input.length() - 1);
-
-        if (result) {
-            System.out.println("The given string is a Palindrome.");
+        if (checker.checkPalindrome(input)) {
+            System.out.println("The input is a palindrome.");
         } else {
-            System.out.println("The given string is NOT a Palindrome.");
+            System.out.println("The input is not a palindrome.");
         }
 
         scanner.close();
+    }
+}
+
+class PalindromeChecker {
+    public boolean checkPalindrome(String input) {
+        if (input == null) return false;
+
+        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        Stack<Character> stack = new Stack<>();
+
+        for (char c : cleanInput.toCharArray()) {
+            stack.push(c);
+        }
+
+        StringBuilder reversed = new StringBuilder();
+        while (!stack.isEmpty()) {
+            reversed.append(stack.pop());
+        }
+
+        return cleanInput.equals(reversed.toString());
     }
 }
