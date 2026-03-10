@@ -1,62 +1,45 @@
-import java.util.Stack;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-interface PalindromeStrategy {
-    boolean isPalindrome(String text);
-}
+public class PalindromePerformanceTracker {
 
-class StackStrategy implements PalindromeStrategy {
-    @Override
-    public boolean isPalindrome(String text) {
-        if (text == null) return false;
-        String clean = text.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        Stack<Character> stack = new Stack<>();
-        for (char c : clean.toCharArray()) {
-            stack.push(c);
-        }
-        StringBuilder reversed = new StringBuilder();
-        while (!stack.isEmpty()) {
-            reversed.append(stack.pop());
-        }
-        return clean.equals(reversed.toString());
-    }
-}
-
-class DequeStrategy implements PalindromeStrategy {
-    @Override
-    public boolean isPalindrome(String text) {
-        if (text == null || text.isEmpty()) return false;
-        String clean = text.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        Deque<Character> deque = new ArrayDeque<>();
-        for (char c : clean.toCharArray()) {
-            deque.addLast(c);
-public class PalindromeApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        PalindromeChecker checker = new PalindromeChecker();
+        System.out.println("=== UC13: Palindrome Performance Comparison ===");
+        System.out.print("Enter a string to test: ");
+        String testInput = scanner.nextLine().replaceAll("\\s+", "").toLowerCase();
 
-        System.out.println("=== Object-Oriented Palindrome Checker (UC11) ===");
-        System.out.print("Enter text: ");
-        String input = scanner.nextLine();
 
-        if (checker.checkPalindrome(input)) {
-            System.out.println("Result: The input is a palindrome.");
-        } else {
-            System.out.println("Result: The input is NOT a palindrome.");
-        }
-        
+        int iterations = 1_000_000;
+
+        System.out.println("\nRunning " + iterations + " iterations for each algorithm...\n");
+
+
+        long timeIterative = benchmark(testInput, iterations, "Iterative");
+
+
+        long timeBuilder = benchmark(testInput, iterations, "StringBuilder");
+
+
+        long timeRecursive = benchmark(testInput, iterations, "Recursive");
+
+        System.out.println("---------------------------------------------------------");
+        System.out.printf("%-20s | %-20s\n", "Algorithm", "Total Time (ms)");
+        System.out.println("---------------------------------------------------------");
+        System.out.printf("%-20s | %-20.2f ms\n", "Two-Pointer", timeIterative / 1_000_000.0);
+        System.out.printf("%-20s | %-20.2f ms\n", "StringBuilder", timeBuilder / 1_000_000.0);
+        System.out.printf("%-20s | %-20.2f ms\n", "Recursive", timeRecursive / 1_000_000.0);
+        System.out.println("---------------------------------------------------------");
+
         scanner.close();
     }
-}
 
-class PalindromeChecker {
-  
-    public boolean checkPalindrome(String input) {
-        if (input == null || input.isEmpty()) {
-            return false;
+    private static long benchmark(String input, int iterations, String type) {
+        // Warm-up phase (to let JVM optimize)
+        for (int i = 0; i < 10000; i++) {
+            runAlgorithm(input, type);
         }
         while (deque.size() > 1) {
             if (!deque.removeFirst().equals(deque.removeLast())) {
@@ -70,54 +53,40 @@ class PalindromeChecker {
 class PalindromeContext {
     private PalindromeStrategy strategy;
 
-    public void setStrategy(PalindromeStrategy strategy) {
-        this.strategy = strategy;
+        long startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            runAlgorithm(input, type);
+        }
+        return System.nanoTime() - startTime;
     }
 
-    public boolean executeStrategy(String text) {
-        return strategy.isPalindrome(text);
+    private static boolean runAlgorithm(String str, String type) {
+        switch (type) {
+            case "Iterative": return isIterative(str);
+            case "StringBuilder": return isStringBuilder(str);
+            case "Recursive": return isRecursive(str, 0, str.length() - 1);
+            default: return false;
+        }
     }
-}
 
-public class UseCase12PalindromeCheckerApp {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        PalindromeContext context = new PalindromeContext();
 
-        System.out.println("=== Strategy Pattern Palindrome Checker (UC12) ===");
-        System.out.print("Enter text: ");
-        String input = scanner.nextLine();
-
-        System.out.println("Select Strategy: 1. Stack (LIFO) 2. Deque (Two-Way)");
-        int choice = scanner.nextInt();
-
-        if (choice == 1) {
-            context.setStrategy(new StackStrategy());
-            System.out.println("Using Stack Strategy...");
-        } else {
-            context.setStrategy(new DequeStrategy());
-            System.out.println("Using Deque Strategy...");
+    public static boolean isIterative(String str) {
+        int left = 0, right = str.length() - 1;
+        while (left < right) {
+            if (str.charAt(left++) != str.charAt(right--)) return false;
         }
-
-        if (context.executeStrategy(input)) {
-            System.out.println("Result: It is a palindrome.");
-        } else {
-            System.out.println("Result: It is NOT a palindrome.");
-        String cleanInput = input.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-        
-        Stack<Character> stack = new Stack<>();
-
-     
-        for (char c : cleanInput.toCharArray()) {
-            stack.push(c);
-        }
+        return true;
+    }
 
 
-        StringBuilder reversed = new StringBuilder();
-        while (!stack.isEmpty()) {
-            reversed.append(stack.pop());
-        }
+    public static boolean isStringBuilder(String str) {
+        return str.equals(new StringBuilder(str).reverse().toString());
+    }
 
-        return cleanInput.equals(reversed.toString());
+
+    public static boolean isRecursive(String str, int left, int right) {
+        if (left >= right) return true;
+        if (str.charAt(left) != str.charAt(right)) return false;
+        return isRecursive(str, left + 1, right - 1);
     }
 }
