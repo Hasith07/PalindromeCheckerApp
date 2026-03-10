@@ -1,41 +1,43 @@
-package src;
 import java.util.Scanner;
 
-public class UseCase9PalindromeCheckerApp {
+public class UseCase10PalindromeCheckerApp {
 
-    // Recursive method to check palindrome
-    public static boolean isPalindrome(String str, int start, int end) {
 
-        // Base condition: if start crosses end
-        if (start >= end) {
-            return true;
+    public static boolean isPalindrome(String str) {
+
+        int start = 0;
+        int end = str.length() - 1;
+
+        while (start < end) {
+
+            if (str.charAt(start) != str.charAt(end)) {
+                return false;
+            }
+
+            start++;
+            end--;
         }
 
-        // If characters don't match
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive call for next characters
-        return isPalindrome(str, start + 1, end - 1);
+        return true;
     }
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Enter a string to check if it is a palindrome:");
+        System.out.println("=== Case-Insensitive & Space-Ignored Palindrome Checker ===");
+        System.out.print("Enter a string: ");
+
         String input = scanner.nextLine();
 
-        // Remove spaces and convert to lowercase for uniform comparison
-        input = input.replaceAll("\\s+", "").toLowerCase();
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
 
-        boolean result = isPalindrome(input, 0, input.length() - 1);
+        boolean result = isPalindrome(normalized);
 
         if (result) {
-            System.out.println("The given string is a Palindrome.");
+            System.out.println("The string \"" + input + "\" is a Palindrome (ignoring spaces and case).");
         } else {
-            System.out.println("The given string is NOT a Palindrome.");
+            System.out.println("The string \"" + input + "\" is NOT a Palindrome.");
         }
 
         scanner.close();
